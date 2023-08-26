@@ -26,7 +26,7 @@ const NavbarComp = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
         localStorage.removeItem("idUser")
-        
+
         navigate("/");
       }
     });
@@ -37,7 +37,7 @@ const NavbarComp = () => {
       <div className="container-fluid">
         <Link className="navbar-brand" to={"/"}>
           <img
-            src="/src/img/logo-juan-modified.png"
+            src="../img/logo-juan-modified.png"
             alt="Logo JuaniCarDetailing"
             width={"70px"}
           />
