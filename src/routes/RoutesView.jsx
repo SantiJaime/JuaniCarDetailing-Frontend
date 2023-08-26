@@ -7,8 +7,7 @@ import ContactPage from "../pages/ContactPage";
 import OneServicePage from "../pages/OneServicePage";
 import AdminPage from "../pages/AdminPage";
 import CartPage from "../pages/CartPage";
-import PrivateRouteUser from "../components/PrivateRouteUser";
-import PrivateRouteAdmin from "../components/PrivateRouteAdmin";
+import PrivateRoute from "../components/PrivateRoute";
 
 const RoutesView = () => {
   return (
@@ -19,25 +18,25 @@ const RoutesView = () => {
       <Route
         path="/admin"
         element={
-          <PrivateRouteAdmin>
+          <PrivateRoute role={"admin"}>
             <AdminPage />
-          </PrivateRouteAdmin>
+          </PrivateRoute>
         }
       />
       <Route
         path="/service/:id"
         element={
-          <PrivateRouteUser>
+          <PrivateRoute role={"user"}>
             <OneServicePage />
-          </PrivateRouteUser>
+          </PrivateRoute>
         }
       />
       <Route
         path="/cart"
         element={
-          <PrivateRouteUser>
+          <PrivateRoute role={"user"}>
             <CartPage />
-          </PrivateRouteUser>
+          </PrivateRoute>
         }
       />
       <Route path="*" element={<ErrorPage />} />
