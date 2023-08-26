@@ -35,21 +35,21 @@ const Homepage = () => {
         <div className="carousel-inner">
           <div className="carousel-item active">
             <img
-              src="/src/img/slider-1.jpg"
+              src="slider-1.jpg"
               className="d-block w-100 carr"
               alt="Slider-1"
             />
           </div>
           <div className="carousel-item">
             <img
-              src="/src/img/slider-2.jpg"
+              src="slider-2.jpg"
               className="d-block w-100 carr"
               alt="Slider-2"
             />
           </div>
           <div className="carousel-item">
             <img
-              src="/src/img/slider-3.jpg"
+              src="slider-3.jpg"
               className="d-block w-100 carr"
               alt="Slider-3"
             />
