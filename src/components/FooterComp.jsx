@@ -8,7 +8,7 @@ const FooterComp = () => {
           <div className="col-lg-4 col-md-6 col-sm-12 margenLogo">
             <div className="img-fluid text-center">
               <img
-                src="logo-juan-modified.png"
+                src="/logo-juan-modified.png"
                 alt="Logo"
                 width="100px"
               />

@@ -37,7 +37,7 @@ const NavbarComp = () => {
       <div className="container-fluid">
         <Link className="navbar-brand" to={"/"}>
           <img
-            src="logo-juan-modified.png"
+            src="/logo-juan-modified.png"
             alt="Logo JuaniCarDetailing"
             width={"70px"}
           />
