@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import clientAxios, { config } from "../utils/axiosClient";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import Swal from "sweetalert2";
 
 const OneServicePage = () => {
   const params = useParams();
@@ -18,6 +19,38 @@ const OneServicePage = () => {
     getOneService();
   }, []);
 
+  const addCart = async (id) => {
+    try {
+      const idUser = JSON.parse(localStorage.getItem("idUser"));
+      const resUser = await clientAxios.get(`/users/${idUser}`, config);
+
+      const { idCart } = resUser.data.oneUser;
+
+      const resCart = await clientAxios.post(
+        `/cart/${idCart}/${id}`,
+        {},
+        config
+      );
+      if (resCart.status === 200) {
+        Swal.fire({
+          icon: "success",
+          title: "Servicio cargado correctamente al carrito",
+          showConfirmButton: false,
+          timer: 1500,
+          background: "#000000",
+          color: "#FFFF",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response.data.msg,
+        background: "#000000",
+        color: "#FFFF",
+      });
+    }
+  };
   return (
     <Container className="my-5 text-white">
       <Row>
@@ -34,7 +67,7 @@ const OneServicePage = () => {
           <p>{service.descripcion}</p>
           <hr />
           <div className="text-end">
-            <Button variant="light">
+            <Button variant="light" onClick={() => addCart(service._id)}>
               <i className="bi bi-cart-plus fs-5"></i> Agregar al carrito
             </Button>
           </div>

@@ -19,16 +19,16 @@ const CrearServicio = ({ setServices }) => {
 
   const handleClose = () => {
     setFormValues({
-        nombre: "",
-        descripcion: "",
-        img: "",
-    })
+      nombre: "",
+      descripcion: "",
+      img: "",
+    });
     setInputName(false);
     setInputDesc(false);
     setInputImg(false);
 
     setShow(false);
-    }
+  };
   const handleShow = () => setShow(true);
 
   const handleChange = (ev) => {
@@ -67,13 +67,13 @@ const CrearServicio = ({ setServices }) => {
             background: "#000000",
             color: "#FFFF",
           });
-          handleClose()
+          handleClose();
           getServices();
         }
       } else {
-        setInputName(true);
-        setInputDesc(true);
-        setInputImg(true);
+        if (!formValues.nombre) setInputName(true);
+        if (!formValues.descripcion) setInputDesc(true);
+        if (!formValues.img) setInputImg(true);
       }
     } catch (error) {
       if (error.response.status === 422) {

@@ -98,6 +98,8 @@ const AdminPage = () => {
               title: "No se pudo eliminar el usuario",
               text: error.response.data.msg,
               icon: "error",
+              background: "#000000",
+              color: "#FFFF",
             });
           }
         }
