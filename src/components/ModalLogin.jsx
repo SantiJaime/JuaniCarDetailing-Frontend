@@ -63,7 +63,7 @@ const ModalLogin = ({ type }) => {
           },
           config
         );
-        if (res.status === 200) {
+        if (res?.status === 200) {
           localStorage.setItem("token", JSON.stringify(res.data.token));
           localStorage.setItem("role", JSON.stringify(res.data.userExist.role));
           localStorage.setItem("idUser", JSON.stringify(res.data.userExist._id))
@@ -77,7 +77,7 @@ const ModalLogin = ({ type }) => {
         setInputEmail(true);
       }
     } catch (error) {
-      if (error.response.status === 422) {
+      if (error?.response?.status === 422) {
         Swal.fire({
           icon: "error",
           title: "No se pudo iniciar sesión",
