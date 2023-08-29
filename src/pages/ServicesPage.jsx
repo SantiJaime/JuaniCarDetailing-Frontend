@@ -66,7 +66,7 @@ const ServicesPage = () => {
               <Card.Body>
                 <Card.Title>{service.nombre}</Card.Title>
                 <hr />
-                {role === "user" ? (
+                {role === "user" || !role ? (
                   token ? (
                     <button
                       className="btn btn-light"
