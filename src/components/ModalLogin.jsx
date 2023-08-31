@@ -6,24 +6,16 @@ import InputGroup from "react-bootstrap/InputGroup";
 import clientAxios, { config } from "../utils/axiosClient";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import ModalRegister from "./ModalRegister";
+import { Formik } from "formik";
+import errorUsersSchema, { errorLoginSchema } from "../utils/validationSchemaErrors";
 
 const ModalLogin = ({ type }) => {
   const [show, setShow] = useState(false);
-  const [inputEmail, setInputEmail] = useState(false);
-  const [inputPass, setInputPass] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleClose = () => {
-    setFormValues({
-      email: "",
-      pass: "",
-    });
-    setInputEmail(false);
-    setInputPass(false);
-    setShow(false);
-  };
+  const handleClose = () => setShow(false);
+
   const handleShow = () => {
     if (type !== "nav") {
       Swal.fire({
@@ -38,43 +30,24 @@ const ModalLogin = ({ type }) => {
     } else setShow(true);
   };
 
-  const [formValues, setFormValues] = useState({
-    email: "",
-    pass: "",
-  });
-
-  const handleChange = (ev) => {
-    const { name, value } = ev.target;
-
-    setFormValues({ ...formValues, [name]: value });
-
-    if (formValues.email) setInputEmail(false);
-    if (formValues.pass) setInputPass(false);
-  };
-
-  const logIn = async () => {
+  const handleClick = async (values) => {
     try {
-      if (formValues.email && formValues.pass) {
-        const res = await clientAxios.post(
-          "/users/login",
-          {
-            email: formValues.email,
-            pass: formValues.pass,
-          },
-          config
-        );
-        if (res?.status === 200) {
-          localStorage.setItem("token", JSON.stringify(res.data.token));
-          localStorage.setItem("role", JSON.stringify(res.data.userExist.role));
-          localStorage.setItem("idUser", JSON.stringify(res.data.userExist._id))
+      const res = await clientAxios.post(
+        "/users/login",
+        {
+          email: values.email,
+          pass: values.pass,
+        },
+        config
+      );
+      if (res?.status === 200) {
+        localStorage.setItem("token", JSON.stringify(res.data.token));
+        localStorage.setItem("role", JSON.stringify(res.data.userExist.role));
+        localStorage.setItem("idUser", JSON.stringify(res.data.userExist._id));
 
-          res.data.userExist.role === "admin"
-            ? navigate("/admin")
-            : navigate("/");
-        }
-      } else {
-        setInputPass(true);
-        setInputEmail(true);
+        res.data.userExist.role === "admin"
+          ? navigate("/admin")
+          : navigate("/");
       }
     } catch (error) {
       if (error?.response?.status === 422) {
@@ -108,49 +81,78 @@ const ModalLogin = ({ type }) => {
             <Modal.Title>Inicia sesión aquí</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form>
-              <Form.Group className="mb-3" controlId="emailId">
-                <Form.Label>Correo electrónico</Form.Label>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text id="groupEmail">
-                    <i className="bi bi-envelope-at-fill"></i>
-                  </InputGroup.Text>
-                  <Form.Control
-                    placeholder="name@example.com"
-                    type="email"
-                    name="email"
-                    onChange={handleChange}
-                    className={
-                      inputEmail ? "form-control is-invalid" : "form-control"
-                    }
-                  />
-                </InputGroup>
-              </Form.Group>
-              <Form.Group className="mb-3" controlId="passId">
-                <Form.Label>Contraseña</Form.Label>
-                <InputGroup className="mb-3">
-                  <InputGroup.Text id="groupPass">
-                    <i className="bi bi-key-fill"></i>
-                  </InputGroup.Text>
-                  <Form.Control
-                    placeholder="***********"
-                    type="password"
-                    name="pass"
-                    onChange={handleChange}
-                    className={
-                      inputPass ? "form-control is-invalid" : "form-control"
-                    }
-                  />
-                </InputGroup>
-              </Form.Group>
-            </Form>
-            {/* <ModalRegister/> */}
+            <Formik
+              initialValues={{
+                email: "",
+                pass: "",
+              }}
+              validationSchema={errorLoginSchema}
+              onSubmit={(values) => handleClick(values)}
+            >
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting,
+              }) => (
+                <Form>
+                  <Form.Group className="mb-3" controlId="emailId">
+                    <Form.Label>Correo electrónico</Form.Label>
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text id="groupEmail">
+                        <i className="bi bi-envelope-at-fill"></i>
+                      </InputGroup.Text>
+                      <Form.Control
+                        placeholder="name@example.com"
+                        type="email"
+                        name="email"
+                        value={values.email}
+                        onChange={handleChange}
+                        className={
+                          errors.email && touched.email && "is-invalid"
+                        }
+                      />
+                    </InputGroup>
+                    <small className="text-danger">
+                      {errors.email && touched.email && errors.email}
+                    </small>
+                  </Form.Group>
+                  <Form.Group className="mb-3" controlId="passId">
+                    <Form.Label>Contraseña</Form.Label>
+                    <InputGroup className="mb-3">
+                      <InputGroup.Text id="groupPass">
+                        <i className="bi bi-key-fill"></i>
+                      </InputGroup.Text>
+                      <Form.Control
+                        placeholder="***********"
+                        type="password"
+                        name="pass"
+                        value={values.pass}
+                        onChange={handleChange}
+                        className={errors.pass && touched.pass && "is-invalid"}
+                      />
+                    </InputGroup>
+                    <small className="text-danger">
+                      {errors.pass && touched.pass && errors.pass}
+                    </small>
+                  </Form.Group>
+                  <hr />
+                  <div className="text-end">
+                    <Button
+                      variant="outline-light"
+                      // type="submit"
+                      onClick={handleSubmit}
+                    >
+                      Iniciar sesión
+                    </Button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </Modal.Body>
-          <Modal.Footer>
-            <Button variant="outline-light" onClick={logIn}>
-              Iniciar sesión
-            </Button>
-          </Modal.Footer>
         </div>
       </Modal>
     </>
